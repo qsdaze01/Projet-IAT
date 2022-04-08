@@ -86,7 +86,7 @@ class SpaceInvaders():
         Cette méthode doit renvoyer l'état du système comme vous aurez choisi de
         le représenter. Vous pouvez utiliser les accesseurs ci-dessus pour cela. 
         """
-        state = [self.get_player_X(), self.get_player_Y(), self.get_invaders_X(), self.get_invaders_Y(), self.get_bullet_X(), self.get_bullet_Y(), self.get_bullet_state()]
+        state = [self.get_player_X(), self.get_player_Y(), self.get_invaders_X(), self.get_invaders_Y(), self.get_bullet_X(), self.get_bullet_Y(), self.get_bullet_state(), self.full_image()]
         return state
         #L'état n'est pas implémenté (SpaceInvaders.get_state)"
 
