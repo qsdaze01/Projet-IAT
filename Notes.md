@@ -45,6 +45,8 @@ Pseudo-code
 
 ```
 
+Le choix de l'action se fait selon une méthode $\epsilon- greedy$. On choisit avec une probabilité $\epsilon$ une action au hasard parmi celles possibles. Et on choisit avec une probabilité $1-\epsilon$ de suivre le modèle à savoir prendre l'action qui maximise $Q(s,a)$. On va alors regarder dans notre tableaux des $Q$ pour l'état $s$ l'action qui donne la plus grande valeur de Q. 
+
 Il faudra visualiser la courbe d'apprentissage (i.e le score cumulé en fonction du temps). L'idée est qu'au fur et à mesure que l'on joue au jeu, on va rencontrer des paires $(état, action)$. Pour chaque paire on calcule une valeur de $Q(s,a)$ et l'on vient actualiser cette valeur si on a déjà rencontré cette paire au préalable. 
 
 Il faut alors définir clairement ce qu'est un état. Pour implémenter $Q-learning$, il faut un nombre d'états discret. Or a priori, il y a un très grand nombre de paires possibles (l'espace des valeurs prises en $X$ et $Y$ pour le vaisseau et l'invaders est continu). 
