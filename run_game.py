@@ -8,7 +8,7 @@ def main():
     game = SpaceInvaders(display=True)
     #controller = KeyboardController()
     controller = RandomAgent(game.na)
- 
+    game.get_state()
     state = game.reset()
     while True:
         action = controller.select_action(state)
