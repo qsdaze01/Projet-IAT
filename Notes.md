@@ -50,3 +50,5 @@ Il faudra visualiser la courbe d'apprentissage (i.e le score cumulé en fonction
 Il faut alors définir clairement ce qu'est un état. Pour implémenter $Q-learning$, il faut un nombre d'états discret. Or a priori, il y a un très grand nombre de paires possibles (l'espace des valeurs prises en $X$ et $Y$ pour le vaisseau et l'invaders est continu). 
 
 Il faut donc discrétiser notre espace de jeu pour faire en sorte de se cantonner à un nombre de paires $(état, action)$ finies. On peut éventuellement discrétiser en taille de bullet. 
+
+<img src="https://render.githubusercontent.com/render/math?math=\delta = r + \gamma \times \underset{a'\in \mathcal{A}}{max} \text{ }Q(s, a') - Q(s,a).>
