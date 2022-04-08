@@ -53,4 +53,3 @@ Il faut alors définir clairement ce qu'est un état. Pour implémenter $Q-learn
 
 Il faut donc discrétiser notre espace de jeu pour faire en sorte de se cantonner à un nombre de paires $(état, action)$ finies. On peut éventuellement discrétiser en taille de bullet. 
 
-<img src="https://render.githubusercontent.com/render/math?math=\delta = r + \gamma \times \underset{a'\in \mathcal{A}}{max} \text{ }Q(s, a') - Q(s,a).>
