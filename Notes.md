@@ -49,6 +49,8 @@ TABLEAU Q : #initialiser avec des 0 pour les Q_value
 eps_init = 1 #valeur de début de epsilon
 eps_end = 0.1 #valeur de fin de epsilon
 nb_episodes = 10000 #nombre d'épisodes
+r = 0.1
+gamma = 0.4
 
 alpha = 0.6 #learning rate
 
@@ -71,22 +73,21 @@ while S non terminal :
                 action = etat[4]
 
     recompense = reward #récupérer le reward généré par l'action
-    state = get_state() #récupérer nouvel état après action
+    new_state = get_state() #récupérer nouvel état après action
 
     delta = 0   
 
-    max = 0 #valeur max de Q pour toutes les actions dans le nouvel étatSS
+    q_max = 0 #valeur max de Q pour toutes les actions dans le nouvel état
         for etat in Q :
-            if etat[0:4] == state and etat[5]>max : 
+            if etat[0:4] == new_state and etat[5]>q_max : 
             #les cases de Q qui matchent l'état dans lequel on est et dont la  valeur de Q est maximale
+                q_max = etat[5]
 
-                max = etat[5]
-                action = etat[4]
-
-
-           
-
-
+    delta = r + gamma*q_max - max
+    for etat in Q :
+        if etat[0:5] == state + [action] : #changer la valeur de Q pour l'état et l'action choisie
+            etat[5] = delta*alpha + etat[5]
+    
 
 
 ```
@@ -101,4 +102,15 @@ Il faut donc discrétiser notre espace de jeu pour faire en sorte de se cantonne
 
 Pour la mise à jour de $\epsilon$, elle peut se faire de façon linéaire du un nombre fixe d'épisodes puis être constante sur la fin. Le mieux est de la faire décroître de façon quadratique. Typiquement on la fait varier e 1.0 à 0.1.
 
-En ce qui concerne la courbe d'apprentissage, il faut tracer le score en fonction du temps et / ou du nombre d'épisodes. 
+En ce qui concerne la courbe d'apprentissage, il faut tracer le score en fonction du temps et / ou du nombre d'épisodes. Mais cette courbe est trop bruitée, elle n'est pas exploitable d'un point de vue statistique. 
+
+Ce qui est plus intéressant est de faire une moyenne mobile 
+
+
+1) Faire une expérience et lisser la courbe 
+2) Faire plusieurs expériences et stocker les résultats dans des csv différents. 
+3) Moyenner les résultats de chaque courbe et tracer la région définie par le max, le min et la moyenne.
+
+Cette courbe finale obtenue témoigne de l'éfficacite de l'**algorithme** et non de la politique sous-jacente liée à une éxpérience. Plus notre région est narrow et notre valeur élevée, le meilleur notre algorithme est. On obtient ce genre de courbe : 
+
+![plot]("Projet Gaspard/game/data/plot.png")
