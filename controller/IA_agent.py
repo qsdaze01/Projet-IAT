@@ -1,10 +1,12 @@
 import string
 import numpy as np
 import time
+import random
 
 class IA_agent():
 
     def __init__ (self, game, alpha, epsilon, gamma):
+        random.seed(time.time())
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)
         self.gamma = float(gamma)
@@ -40,6 +42,7 @@ class IA_agent():
         
         if state_in_tab == False:
             self.add_state(actual_state)
+            action = random.randrange(0, 4, 1)
 
         return action 
     
