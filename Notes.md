@@ -53,3 +53,6 @@ Il faut alors définir clairement ce qu'est un état. Pour implémenter $Q-learn
 
 Il faut donc discrétiser notre espace de jeu pour faire en sorte de se cantonner à un nombre de paires $(état, action)$ finies. On peut éventuellement discrétiser en taille de bullet. 
 
+Pour la mise à jour de $\epsilon$, elle peut se faire de façon linéaire du un nombre fixe d'épisodes puis être constante sur la fin. Le mieux est de la faire décroître de façon quadratique.
+
+En ce qui concerne la courbe d'apprentissage, il faut tracer le score en fonction du temps et / ou du nombre d'épisodes. 
