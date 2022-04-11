@@ -4,3 +4,5 @@ class IA_agent():
 
     def __init__ (self):
         a = 1
+    
+    def select_action(self, state):
