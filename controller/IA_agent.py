@@ -1,20 +1,27 @@
 import numpy as np
+import time
 
 class IA_agent():
 
-    def __init__ (self, game):
+    def __init__ (self, game, alpha, epsilon, gamma):
+        self.alpha = alpha
+        self.epsilon = epsilon
+        self.gamma = gamma
         self.game = game
+
         self.nb_invaders = game.get_invaders_X()
-        # self.nb_states = nb_invaders*16*16*12*2
-        # self.Q = np.zeros([self.nb_states, 4])    
         self.Q = []
         self.states = []
 
     def add_state(self, actual_state):
         self.states.append(actual_state)
-        self.Q.append([actual_state])
+        self.Q.append(actual_state)
+        index = np.where(self.Q == actual_state)
+        time.sleep(1)
+        print("aaaaaaaaaa")
+        print(index)
         for i in range(4):
-            self.Q[actual_state].append(0)
+            self.Q[index].append(0)
 
     def select_action(self, state):
         max = 0
