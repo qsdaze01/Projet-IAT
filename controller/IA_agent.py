@@ -1,12 +1,14 @@
+import string
 import numpy as np
 import time
 
 class IA_agent():
 
     def __init__ (self, game, alpha, epsilon, gamma):
-        self.alpha = alpha
-        self.epsilon = epsilon
-        self.gamma = gamma
+        self.alpha = float(alpha)
+        self.epsilon = float(epsilon)
+        self.gamma = float(gamma)
+
         self.game = game
 
         self.nb_invaders = game.get_invaders_X()
@@ -14,14 +16,13 @@ class IA_agent():
         self.states = []
 
     def add_state(self, actual_state):
-        self.states.append(actual_state)
-        self.Q.append(actual_state)
-        index = np.where(self.Q == actual_state)
-        time.sleep(1)
-        print("aaaaaaaaaa")
-        print(index)
-        for i in range(4):
-            self.Q[index].append(0)
+        string_actual_state = ""
+        for i in range(len(actual_state)):
+            string_actual_state += str(actual_state[i])
+        self.states.append(string_actual_state)
+        #self.Q.append(actual_state)
+
+        self.Q.append(np.zeros(4))
 
     def select_action(self, state):
         max = 0
@@ -44,8 +45,22 @@ class IA_agent():
     
     def updateQ(self, state, action, reward, next_state):
         try :
-            max_next_state = np.max(self.Q[next_state])
-        except IndexError:
+            string_next_state = ""
+            for i in range(len(next_state)):
+                string_next_state += str(next_state[i])
+            
+            index_next = self.states.index(string_next_state)
+            max_next_state = np.max(self.Q[index_next])
+        except (IndexError, ValueError):
             max_next_state = 0
 
-        self.Q[state][action] = (1. - self.alpha)*self.Q[state][action] + self.alpha*(reward + self.gamma*max_next_state)
+        string_state = ""
+        for i in range(len(state)):
+            string_state += str(state[i])
+
+        index = self.states.index(string_state)
+        #print(self.states)
+        #print(string_state)
+        #print(index)
+
+        self.Q[index][action] = (1. - self.alpha)*self.Q[index][action] + self.alpha*(reward + self.gamma*max_next_state)
