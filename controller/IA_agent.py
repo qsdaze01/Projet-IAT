@@ -3,6 +3,8 @@ import numpy as np
 import time
 import random
 
+limite_epsilon = 0.01
+
 class IA_agent():
 
     def __init__ (self, game, alpha, epsilon, gamma):
@@ -22,29 +24,39 @@ class IA_agent():
         for i in range(len(actual_state)):
             string_actual_state += str(actual_state[i])
         self.states.append(string_actual_state)
-        #self.Q.append(actual_state)
 
         self.Q.append(np.zeros(4))
 
-    def select_action(self, state):
-        max = 0
-        state_in_tab = False
-        actual_state = self.game.get_state()
-        action = -1
-
-        for i in range(len(self.Q)):
-            if self.states[i] == actual_state :
-                state_in_tab = True
-                for j in range(4): 
-                    if max < self.Q[i][j]:
-                        max = self.Q[i][j]
-                        action = j
-        
-        if state_in_tab == False:
+    def select_action(self):
+        type_action = random.randrange(1)
+        if type_action < self.epsilon:
+            actual_state = self.game.get_state()
             self.add_state(actual_state)
             action = random.randrange(0, 4, 1)
 
-        return action 
+        else:
+            max = 0
+            state_in_tab = False
+            actual_state = self.game.get_state()
+            action = -1
+
+            for i in range(len(self.Q)):
+                if self.states[i] == actual_state :
+                    state_in_tab = True
+                    for j in range(4): 
+                        if max < self.Q[i][j]:
+                            max = self.Q[i][j]
+                            action = j
+            
+            if state_in_tab == False:
+                self.add_state(actual_state)
+                action = random.randrange(0, 4, 1)
+
+        if self.epsilon > limite_epsilon:
+            self.epsilon = self.epsilon - 0.01
+        
+        return action
+
     
     def updateQ(self, state, action, reward, next_state):
         try :
@@ -61,9 +73,19 @@ class IA_agent():
         for i in range(len(state)):
             string_state += str(state[i])
 
-        index = self.states.index(string_state)
+        try:
+            index = self.states.index(string_state)
+            self.Q[index][action] = (1. - self.alpha)*self.Q[index][action] + self.alpha*(reward + self.gamma*max_next_state)
+        except ValueError:
+            pass
         #print(self.states)
         #print(string_state)
         #print(index)
 
-        self.Q[index][action] = (1. - self.alpha)*self.Q[index][action] + self.alpha*(reward + self.gamma*max_next_state)
+
+
+    def printQ(self):
+        print(self.Q)
+
+    def printStates(self):
+        print(self.states)

@@ -22,12 +22,29 @@ def main():
     controller = IA_agent(game, alpha, epsilon, gamma)
     game.get_state()
     state = game.reset()
+    cumul = 0
+    is_done = False
     while True:
-        action = controller.select_action(state)
+        
+
+        action = controller.select_action()
         previous_state = state
         state, reward, is_done = game.step(action)
         controller.updateQ(previous_state, action, reward, state)
         sleep(0.0001)
+        
+        if is_done == True:
+            #controller.printStates()
+            print(is_done)
+            game.reset()
+            is_done = False
+            continue
+
+        # Pour print Q
+        """cumul += 1
+        if cumul == 100:
+            cumul = 0
+            controller.printQ()"""
 
 if __name__ == '__main__' :
     main()
