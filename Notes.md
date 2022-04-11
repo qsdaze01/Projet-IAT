@@ -36,9 +36,55 @@ On actualise alors $Q(s,a)$ tel que : $$Q(s,a) \leftarrow Q(s,a) + \alpha \delta
 En fait on peut voir $\delta$ comme une dérivée partielle discrete d'ordre 1. On souhaite le faire tendre vers 0. 
 
 
-```
+```python
 Pseudo-code
 ------------
+
+TABLEAU Q : #initialiser avec des 0 pour les Q_value
+[[get_player_X, distance_X, distance_Y, get_bullet_state, action_0, Q_value],
+ [get_player_X, distance_X, distance_Y, get_bullet_state, action_1, Q_value],
+ [get_player_X, distance_X, distance_Y, get_bullet_state, action_2, Q_value],
+ [get_player_X, distance_X, distance_Y, get_bullet_state, action_3, Q_value]] 
+
+eps_init = 1 #valeur de début de epsilon
+eps_end = 0.1 #valeur de fin de epsilon
+nb_episodes = 10000 #nombre d'épisodes
+
+alpha = 0.6 #learning rate
+
+
+while S non terminal : 
+
+    state = get_state()
+
+    p = random(0,1)
+    if p<eps :
+        action = random(0,1,2,3)
+    else :
+        max = 0 #valeur max de Q pour toutes les actions 
+        action = 0
+        for etat in Q :
+            if etat[0:4] == state and etat[5]>max : 
+            #les cases de Q qui matchent l'état dans lequel on est et dont la  valeur de Q est maximale
+
+                max = etat[5]
+                action = etat[4]
+
+    recompense = reward #récupérer le reward généré par l'action
+    state = get_state() #récupérer nouvel état après action
+
+    delta = 0   
+
+    max = 0 #valeur max de Q pour toutes les actions dans le nouvel étatSS
+        for etat in Q :
+            if etat[0:4] == state and etat[5]>max : 
+            #les cases de Q qui matchent l'état dans lequel on est et dont la  valeur de Q est maximale
+
+                max = etat[5]
+                action = etat[4]
+
+
+           
 
 
 
@@ -53,6 +99,6 @@ Il faut alors définir clairement ce qu'est un état. Pour implémenter $Q-learn
 
 Il faut donc discrétiser notre espace de jeu pour faire en sorte de se cantonner à un nombre de paires $(état, action)$ finies. On peut éventuellement discrétiser en taille de bullet. 
 
-Pour la mise à jour de $\epsilon$, elle peut se faire de façon linéaire du un nombre fixe d'épisodes puis être constante sur la fin. Le mieux est de la faire décroître de façon quadratique.
+Pour la mise à jour de $\epsilon$, elle peut se faire de façon linéaire du un nombre fixe d'épisodes puis être constante sur la fin. Le mieux est de la faire décroître de façon quadratique. Typiquement on la fait varier e 1.0 à 0.1.
 
 En ce qui concerne la courbe d'apprentissage, il faut tracer le score en fonction du temps et / ou du nombre d'épisodes. 
