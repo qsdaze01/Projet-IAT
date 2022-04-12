@@ -2,6 +2,7 @@ import string
 import numpy as np
 import time
 import random
+import csv
 
 limite_epsilon = 0.01
 
@@ -29,11 +30,14 @@ class IA_agent():
 
     def select_action(self):
         type_action = random.randrange(1)
+
+        # Cas random
         if type_action < self.epsilon:
             actual_state = self.game.get_state()
             self.add_state(actual_state)
             action = random.randrange(0, 4, 1)
 
+        # Cas où on suit la politique
         else:
             max = 0
             state_in_tab = False
@@ -51,9 +55,6 @@ class IA_agent():
             if state_in_tab == False:
                 self.add_state(actual_state)
                 action = random.randrange(0, 4, 1)
-
-        if self.epsilon > limite_epsilon:
-            self.epsilon = self.epsilon - 0.01
         
         return action
 
@@ -78,10 +79,6 @@ class IA_agent():
             self.Q[index][action] = (1. - self.alpha)*self.Q[index][action] + self.alpha*(reward + self.gamma*max_next_state)
         except ValueError:
             pass
-        #print(self.states)
-        #print(string_state)
-        #print(index)
-
 
 
     def printQ(self):
@@ -89,3 +86,17 @@ class IA_agent():
 
     def printStates(self):
         print(self.states)
+
+    def write_Q_CSV(self, file, filename):
+        file = open(filename, 'w')
+        writer = csv.writer(file)
+        for i in range(len(self.Q)):
+            writer.writerow(self.Q[i])
+        file.close()
+
+    def MAJ_epsilon(self):
+        if self.epsilon > limite_epsilon:
+            self.epsilon = self.epsilon - 0.001
+    
+    def print_epsilon(self):
+        print("Epsilon : " + str(self.epsilon))
