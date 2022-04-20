@@ -83,6 +83,20 @@ def main():
             controller.MAJ_epsilon(int(nb_iterations), count_episodes)
 
             print(len(controller.states))
+            if len(controller.states) > 13000:
+                
+                game = SpaceInvaders(display=True)
+                game.get_state()
+                state = game.reset()
+                count_frames = 0
+                while count_frames < 5000: 
+                    sleep(0.0001)
+                    action = controller.select_action()
+                    state, reward, is_done = game.step(action)
+                
+                controller.write_Q_CSV(f_Q, filename_Q)
+                controller.write_states_CSV(f_states, filename_states)
+                exit()
 
             # Boucle des frames
             while count_frames < 5000:
@@ -91,21 +105,23 @@ def main():
                 action = controller.select_action()
                 previous_state = state
                 state, reward, is_done = game.step(action)
+
+                # Cas où l'IA perd
+                if is_done == True:
+                    #controller.printStates()
+                    print(is_done)
+                    game.get_state()
+                    state = game.reset()
+                    count_frames = 0
+                    is_done = False
+                    break
+
                 controller.updateQ(previous_state, action, reward, state)
                 # sleep(0.0001)
                 
                 # Actualisation des paramètres
                 count_reward += reward
                 count_frames += 1
-                
-                # Cas où l'IA perd
-                if is_done == True:
-                    #controller.printStates()
-                    print(is_done)
-                    game.reset()
-                    count_frames = 0
-                    is_done = False
-                    break
 
                 # Pour print Q
                 """cumul += 1
