@@ -95,7 +95,7 @@ class SpaceInvaders():
         for i in range(len(self.get_invaders_Y())):
             distance_Y.append((self.get_player_Y() - self.get_invaders_Y()[i])//50)
 
-        return [self.get_player_X()//50, distance_X, distance_Y, self.get_bullet_state()]
+        return [(self.get_player_X()//50), distance_X, distance_Y, self.get_bullet_state()]
         #L'état n'est pas implémenté (SpaceInvaders.get_state)"
 
     def reset(self):

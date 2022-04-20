@@ -3,6 +3,7 @@ import numpy as np
 import time
 import random
 import csv
+import math
 
 limite_epsilon = 0.01
 
@@ -13,6 +14,7 @@ class IA_agent():
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)
         self.gamma = float(gamma)
+        self.epsilon_max = self.epsilon
 
         self.game = game
 
@@ -93,18 +95,35 @@ class IA_agent():
 
     def printStates(self):
         print(self.states)
+    
+    def print_epsilon(self):
+        print("Epsilon : " + str(self.epsilon))
+
+    def write_states_CSV(self, file, filename):
+        file = open(filename, 'w')
+        writer = csv.writer(file)
+        writer.writerows(self.states)
+        file.close()
 
     def write_Q_CSV(self, file, filename):
         file = open(filename, 'w')
         writer = csv.writer(file)
-        #for i in range(len(self.states)):
-            #writer.writerow(self.states[i])
-        writer.writerows(self.states)
+        writer.writerows(self.Q)
         file.close()
 
-    def MAJ_epsilon(self):
+    def read_Q_CSV(self, file, filename):
+        file = open(filename, 'r')
+        reader = csv.reader(file)
+        i = 0
+        for line in reader:
+            self.Q.append(line)
+            i += 1
+
+    def MAJ_epsilon(self, nb_iteration, count_episode):
         if self.epsilon > limite_epsilon:
-            self.epsilon = self.epsilon - 0.001
+            self.epsilon = (math.atan(-(20*count_episode/nb_iteration - 10)) + math.pi/2)/math.pi
+            if self.epsilon > self.epsilon_max:
+                self.epsilon = self.epsilon_max
     
-    def print_epsilon(self):
-        print("Epsilon : " + str(self.epsilon))
+    
+    
