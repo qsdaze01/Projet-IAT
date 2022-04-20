@@ -19,7 +19,7 @@ def main():
         nb_iterations = sys.argv[4]
 
     # Gestion écriture CSV
-    filename = 'Q.csv'
+    filename = 'states.csv'
     header = ['score','episode']
     f = open(filename,'w')
     writer = csv.writer(f)
@@ -52,6 +52,8 @@ def main():
         count_reward = 0
         controller.MAJ_epsilon()
 
+        print(len(controller.states))
+
         # Boucle des frames
         while count_frames < 5000:
 
@@ -81,8 +83,8 @@ def main():
                 cumul = 0
                 controller.printQ()"""
 
-        # Ecriture dans le CSV
-        controller.write_Q_CSV(f, filename)
+    # Ecriture dans le CSV
+    controller.write_Q_CSV(f, filename)
 
 if __name__ == '__main__' :
     main()

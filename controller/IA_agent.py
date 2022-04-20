@@ -16,7 +16,6 @@ class IA_agent():
 
         self.game = game
 
-        self.nb_invaders = game.get_invaders_X()
         self.Q = []
         self.states = []
 
@@ -31,21 +30,29 @@ class IA_agent():
     def select_action(self):
         type_action = random.randrange(1)
 
+        state_in_tab = False
+
+        actual_state = self.game.get_state()
+        string_actual_state = ""
+        for i in range(len(actual_state)):
+            string_actual_state += str(actual_state[i])
+            
         # Cas random
         if type_action < self.epsilon:
-            actual_state = self.game.get_state()
-            self.add_state(actual_state)
+            for i in range(len(self.states)):
+                if self.states[i] == string_actual_state:
+                    state_in_tab = True
+            if state_in_tab == False:  
+                self.add_state(actual_state)
             action = random.randrange(0, 4, 1)
 
         # Cas où on suit la politique
         else:
             max = 0
-            state_in_tab = False
-            actual_state = self.game.get_state()
             action = -1
 
-            for i in range(len(self.Q)):
-                if self.states[i] == actual_state :
+            for i in range(len(self.states)):
+                if self.states[i] == string_actual_state :
                     state_in_tab = True
                     for j in range(4): 
                         if max < self.Q[i][j]:
@@ -90,8 +97,9 @@ class IA_agent():
     def write_Q_CSV(self, file, filename):
         file = open(filename, 'w')
         writer = csv.writer(file)
-        for i in range(len(self.Q)):
-            writer.writerow(self.Q[i])
+        #for i in range(len(self.states)):
+            #writer.writerow(self.states[i])
+        writer.writerows(self.states)
         file.close()
 
     def MAJ_epsilon(self):
