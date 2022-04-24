@@ -1,3 +1,4 @@
+from time import sleep
 import pygame
 import random
 import math
@@ -82,11 +83,7 @@ class SpaceInvaders():
         return pygame.surfarray.array3d(self.screen)
 
     def get_state(self):
-        """ A COMPLETER AVEC VOTRE ETAT
-        Cette méthode doit renvoyer l'état du système comme vous aurez choisi de
-        le représenter. Vous pouvez utiliser les accesseurs ci-dessus pour cela. 
-        """
-
+        # Calcul des distances 
         distance_X = []
         for i in range(len(self.get_invaders_X())):
             distance_X.append(int((self.get_player_X() - self.get_invaders_X()[i])//50))
@@ -94,15 +91,14 @@ class SpaceInvaders():
         distance_Y = []
         for i in range(len(self.get_invaders_Y())):
             
-            #if self.get_invaders_Y()[i]//50 >16 : 
-            #    print("oui")
-
-            # Problème de valeur du Y de l'invader 
-            # Pas de problème de taille du tableau 
+            # Gestion du bug
+            if self.get_invaders_Y()[i]//50 > 16 : 
+                print(self.get_invaders_Y()[i])
+                return 1
 
             distance_Y.append(int((self.get_player_Y() - self.get_invaders_Y()[i])//50))
 
-        return [int(self.get_player_X()//50), distance_X[0], distance_Y[0], self.get_bullet_state()]
+        return [distance_X[0], distance_Y[0], self.get_bullet_state()]
 
     def reset(self):
         """Reset the game at the initial state.
@@ -158,7 +154,7 @@ class SpaceInvaders():
         if action == 2: # FIRE
             self.player_Xchange = 0
             # Fixing the change of direction of bullet
-            if self.bullet_state is "rest":
+            if self.bullet_state == "rest":
                 self.bullet_X = self.player_X
                 self.move_bullet(self.bullet_X, self.bullet_Y)
         if action == 3: # NO ACTION 
@@ -173,7 +169,7 @@ class SpaceInvaders():
         if self.bullet_Y <= 0:
             self.bullet_Y = 600
             self.bullet_state = "rest"
-        if self.bullet_state is "fire":
+        if self.bullet_state == "fire":
             self.move_bullet(self.bullet_X, self.bullet_Y)
             self.bullet_Y -= self.bullet_Ychange
     
@@ -183,7 +179,7 @@ class SpaceInvaders():
             if self.invader_Y[i] >= 450:
                 if abs(self.player_X-self.invader_X[i]) < 80:
                     for j in range(SpaceInvaders.NO_INVADERS):
-                        self.invader_Y[j] = 2000
+                        self.invader_Y[j] = 30
                     is_done = True
                     break
                 

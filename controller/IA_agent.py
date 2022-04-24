@@ -30,11 +30,18 @@ class IA_agent():
         self.Q.append(np.zeros(4))
 
     def select_action(self):
+        # Tirage au sort du type d'action choisie (aléatoire ou selon Q)
         type_action = random.randrange(1)
 
         state_in_tab = False
 
         actual_state = self.game.get_state()
+
+        # Gestion du bug
+        if actual_state == 1 :
+            return -1
+        
+        # Conversion de l'état en string
         string_actual_state = ""
         for i in range(len(actual_state)):
             string_actual_state += str(actual_state[i])
@@ -50,9 +57,10 @@ class IA_agent():
 
         # Cas où on suit la politique
         else:
-            max = 0
+            max = 0.0
             action = -1
 
+            # Cas où le l'état a déjà été croisé
             for i in range(len(self.states)):
                 if self.states[i] == string_actual_state :
                     state_in_tab = True
@@ -61,6 +69,7 @@ class IA_agent():
                             max = self.Q[i][j]
                             action = j
             
+            # Cas où l'état n'a jamais été croisé
             if state_in_tab == False:
                 self.add_state(actual_state)
                 action = random.randrange(0, 4, 1)
@@ -69,6 +78,7 @@ class IA_agent():
 
     
     def updateQ(self, state, action, reward, next_state):
+        # Test si l'état suivant a déjà été vu, si oui choisi le max 
         try :
             string_next_state = ""
             for i in range(len(next_state)):
@@ -76,13 +86,15 @@ class IA_agent():
             
             index_next = self.states.index(string_next_state)
             max_next_state = np.max(self.Q[index_next])
-        except (IndexError, ValueError):
+        except (IndexError, ValueError, TypeError):
             max_next_state = 0
 
+        # Conversion de l'état en string
         string_state = ""
         for i in range(len(state)):
             string_state += str(state[i])
 
+        # Met à jour Q
         try:
             index = self.states.index(string_state)
             self.Q[index][action] = (1. - self.alpha)*self.Q[index][action] + self.alpha*(reward + self.gamma*max_next_state)
@@ -105,6 +117,14 @@ class IA_agent():
         writer.writerows(self.states)
         file.close()
 
+    def write_reward_CSV(self, file, filename, tab):
+        file = open(filename, 'w')
+        writer = csv.writer(file)
+        print(len(tab))
+        for i in range(len(tab)):
+            writer.writerow([tab[i]])
+        file.close()
+
     def write_Q_CSV(self, file, filename):
         file = open(filename, 'w')
         writer = csv.writer(file)
@@ -120,6 +140,7 @@ class IA_agent():
             i += 1
 
     def MAJ_epsilon(self, nb_iteration, count_episode):
+        # On fait varier epsilon selon une fonction de la forme de arctan(x)
         if self.epsilon > limite_epsilon:
             self.epsilon = (math.atan(-(20*count_episode/nb_iteration - 10)) + math.pi/2)/math.pi
             if self.epsilon > self.epsilon_max:
