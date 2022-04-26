@@ -4,6 +4,7 @@ from game.SpaceInvaders import SpaceInvaders
 from controller.keyboard import KeyboardController
 from controller.random_agent import RandomAgent
 from controller.IA_agent import IA_agent
+from controller.stupid_agent import StupidAgent
 import sys
 import csv
 
@@ -117,7 +118,7 @@ def main():
                 # Cas où l'IA perd
                 if is_done == True:
                     print(is_done)
-                    controller.updateQ(previous_state, action, -10, state)
+                    controller.updateQ(previous_state, action, -100, state)
                     game.get_state()
                     state = game.reset()
                     count_frames = 0
@@ -130,6 +131,7 @@ def main():
                 # Actualisation des paramètres
                 count_reward += reward
                 count_frames += 1
+
 
         # Ecriture dans le CSV
         controller.write_Q_CSV(f_Q, filename_Q)
